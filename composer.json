@@ -1,0 +1,15 @@
+{
+  "name": "nish/db-migration",
+  "description": "Simple DB migration tool",
+  "keywords": ["orm", "database"],
+  "homepage": "https://github.com/nishimura/db-migration",
+  "license": "MIT",
+  "authors": [{
+    "name": "Satoshi Nishimura",
+    "email": "nishim314@gmail.com"
+  }],
+  "require": {
+    "php": ">=5.4.0"
+  },
+  "bin": ["bin/db-migration.php"]
+}
