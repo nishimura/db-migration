@@ -41,6 +41,12 @@ create table foo(
 }
 ```
 
+setup dsn
+
+```
+export PDO_DSN='pgsql:host=localhost;dbname=mydb;user=myuser;password=secret'
+```
+
 run command
 
 ```bash
