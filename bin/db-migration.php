@@ -109,6 +109,14 @@ function decorate($str, $color){
     echo "\x1b[" . $pattern . 'm' . $str . "\x1b[m\n";
 }
 
+function get_git_hash($file)
+{
+    $data = file_get_contents($file);
+    $prefix = 'blob ' . strlen($data) . "\0";
+    $sha1 = sha1($prefix . $data);
+    return $sha1;
+}
+
 function run($force, $nocheck, $nodown, $test){
     $files = getFiles();
     $pdo = getPdo();
@@ -122,7 +130,7 @@ function run($force, $nocheck, $nodown, $test){
     }
     $fileHashes = [];
     foreach ($files as $file => $clazz){
-        $sha1 = sha1_file($file);
+        $sha1 = get_git_hash($file);
         $fileHashes[$file] = $sha1;
     }
 
