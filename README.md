@@ -118,7 +118,6 @@ This tool scans all php files in db-migration directory.
 db-migration/
 ├── 001-Initialize
 │   ├── Account.php
-│   ├── Account.php~
 │   └── Item.php
 ├── 002-Setup
 │   ├── AccountSetup.php
