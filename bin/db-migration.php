@@ -240,7 +240,7 @@ $longopts = [
 ];
 $opts = getopt($shortopts, $longopts);
 if (isset($opts['h']) || isset($opts['help'])){
-    echo "migration.php [-h|--help] [-y|--yes] [--dev]\n";
+    echo "migration.php [-h|--help] [-y|--yes] [--dev] [--prod] [--test]\n";
     echo "\n";
     echo 'PDO_DSN="pgsql:host=..." vendor/bin/db-migration.php' . "\n";
     echo "  or export PDO_DSN=\"...\"\n";
