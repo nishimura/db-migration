@@ -60,7 +60,7 @@ Success!!
 ```
 
 
-## Scan file modifications automatic
+## Automatically scan file changes
 
 change 001_Foo.php
 
@@ -84,9 +84,7 @@ create table foo(
     public function down(PDO $pdo)
     {
 
-        $pdo->exec('
-drop table foo
-');
+        $pdo->exec('drop table foo');
     }
 }
 ```
