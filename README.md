@@ -9,10 +9,9 @@ Version management by sh1 file hash, like git.
 
 ```bash
 composer require nish/db-migration
+vendor/bin/db-migration.php -h
 
 mkdir db-migration
-
-vendor/bin/db-migration.php -h
 ```
 
 ## Migration File
@@ -56,7 +55,7 @@ upgrade:
  3b1243                    001_Foo.php                  Foo                     
 
 Migrate? [y/n]: y
-up  : 3b1243736a19b730845aaf8521336e3bbce12122 ...ok
+up  : 3b1243736a19b730845aaf8521336e3bbce12122 .ok
 Success!!
 ```
 
@@ -95,17 +94,37 @@ drop table foo
 run command
 
 ```bash
-vendor/bin/db-migration.php
+vendor/bin/db-migration.php --dry-run --down --dev
 Donwgrade:
  3b1243                    001_Foo.php                  Foo  2018-10-25 18:33:56
 upgrade:
  9e4e3b                    001_Foo.php                  Foo                     
 
 Migrate? [y/n]: y
-down: 3b1243736a19b730845aaf8521336e3bbce12122 ...ok
+down: 3b1243736a19b730845aaf8521336e3bbce12122 .ok
 up  : 9e4e3bb05f5e7de76f9971b1cc6afaa4b5ca6687 ...ok
 Success!!
 ```
+
+--dry-run: rollback transaction  
+--donw: allow downgrade  
+--dev: run upgrade -> downgrade -> upgrade  
+
+and
+
+```bash
+vendor/bin/db-migration.php --down
+Donwgrade:
+ 3b1243                    001_Foo.php                  Foo  2018-10-25 18:33:56
+upgrade:
+ 9e4e3b                    001_Foo.php                  Foo                     
+
+Migrate? [y/n]: y
+down: 3b1243736a19b730845aaf8521336e3bbce12122 .ok
+up  : 9e4e3bb05f5e7de76f9971b1cc6afaa4b5ca6687 .ok
+Success!!
+```
+
 
 NOTE:
 show file by git command
