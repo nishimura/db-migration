@@ -236,11 +236,11 @@ $longopts = [
     , 'yes'
     , 'dev'
     , 'prod'
-    , 'test'
+    , 'dry-run'
 ];
 $opts = getopt($shortopts, $longopts);
 if (isset($opts['h']) || isset($opts['help'])){
-    echo "migration.php [-h|--help] [-y|--yes] [--dev] [--prod] [--test]\n";
+    echo "migration.php [-h|--help] [-y|--yes] [--dev] [--prod] [--dry-run]\n";
     echo "\n";
     echo 'PDO_DSN="pgsql:host=..." vendor/bin/db-migration.php' . "\n";
     echo "  or export PDO_DSN=\"...\"\n";
@@ -248,14 +248,14 @@ if (isset($opts['h']) || isset($opts['help'])){
     echo "    -y --yes: no prompt\n";
     echo "       --dev: run upgrade downgrade upgrade, for check correct downgrade\n";
     echo "      --prod: downgrade not allowed\n";
-    echo "      --test: test only, rollback transaction\n";
+    echo "   --dry-run: check only, rollback transaction\n";
     echo "\n";
     exit(1);
 }
 $yes = isset($opts['y']) || isset($opts['yes']);
 $nocheck = !isset($opts['dev']);
 $prod = isset($opts['prod']);
-$test = isset($opts['test']);
+$test = isset($opts['dry-run']);
 
 try {
     run($yes, $nocheck, $prod, $test);
