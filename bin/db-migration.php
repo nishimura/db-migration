@@ -235,30 +235,33 @@ $longopts = [
     'help'
     , 'yes'
     , 'dev'
-    , 'prod'
+    , 'down'
     , 'dry-run'
 ];
 $opts = getopt($shortopts, $longopts);
 if (isset($opts['h']) || isset($opts['help'])){
-    echo "migration.php [-h|--help] [-y|--yes] [--dev] [--prod] [--dry-run]\n";
+    echo "migration.php [-h|--help] [-y|--yes] [--dev] [--down] [--dry-run]\n";
     echo "\n";
     echo 'PDO_DSN="pgsql:host=..." vendor/bin/db-migration.php' . "\n";
     echo "  or export PDO_DSN=\"...\"\n";
     echo "\n";
     echo "    -y --yes: no prompt\n";
     echo "       --dev: run upgrade downgrade upgrade, for check correct downgrade\n";
-    echo "      --prod: downgrade not allowed\n";
+    echo "      --down: downgrade allowed\n";
     echo "   --dry-run: check only, rollback transaction\n";
     echo "\n";
     exit(1);
 }
-$yes = isset($opts['y']) || isset($opts['yes']);
 $nocheck = !isset($opts['dev']);
-$prod = isset($opts['prod']);
+$nodown = !isset($opts['down']);
 $test = isset($opts['dry-run']);
+if ($nodown)
+    $yes = isset($opts['y']) || isset($opts['yes']);
+else
+    $yes = false;
 
 try {
-    run($yes, $nocheck, $prod, $test);
+    run($yes, $nocheck, $nodown, $test);
 }catch (Exception $e){
     decorate("Error!! " . $e->getMessage(), array('bgred', 'white'));
     throw $e;
