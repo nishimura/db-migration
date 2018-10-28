@@ -192,7 +192,7 @@ function run($force, $nocheck, $nodown, $test){
         $obj = new $declared();
         echo "down: $hash";
         $obj->down($pdo);
-        echo ' ...';
+        echo ' .';
         $pdo->exec("delete from app_migration_info where hash = '$hash'");
         echo "ok\n";
     }
@@ -213,7 +213,7 @@ function run($force, $nocheck, $nodown, $test){
             $obj->up($pdo);
             echo '.';
         }else{
-            echo ' ...';
+            echo ' .';
         }
 
         $stmt = $pdo->prepare("
