@@ -117,7 +117,7 @@ function get_git_hash($file)
     return $sha1;
 }
 
-function run($force, $nocheck, $nodown, $test){
+function run($force, $nocheck, $nodown, $test, $onlyinfo){
     $files = getFiles();
     $pdo = getPdo();
 
@@ -171,11 +171,17 @@ function run($force, $nocheck, $nodown, $test){
         return;
     }
 
-    if (!$force && !prompt('Migrate?'))
-        return;
+    if ($onlyinfo){
+        if (!prompt('Update Only The Information Schema? (Danger) '))
+            return;
 
-    if ($down && $nodown)
-        throw new Exception('Needs Downgrade!! Try manually.');
+    }else{
+        if (!$force && !prompt('Migrate?'))
+            return;
+
+        if ($down && $nodown)
+            throw new Exception('Needs Downgrade!! Try manually.');
+    }
 
 
     foreach ($rows as $row){
@@ -191,7 +197,8 @@ function run($force, $nocheck, $nodown, $test){
         $declared = end($cls);
         $obj = new $declared();
         echo "down: $hash";
-        $obj->down($pdo);
+        if (!$onlyinfo)
+            $obj->down($pdo);
         echo ' .';
         $pdo->exec("delete from app_migration_info where hash = '$hash'");
         echo "ok\n";
@@ -204,9 +211,11 @@ function run($force, $nocheck, $nodown, $test){
 
         $obj = new $clazz();
         echo "up  : $sha1";
-        $obj->up($pdo);
 
-        if (!$nocheck){
+        if (!$onlyinfo)
+            $obj->up($pdo);
+
+        if (!$nocheck && !$onlyinfo){
             echo ' .';
             $obj->down($pdo);
             echo '.';
@@ -237,6 +246,7 @@ $longopts = [
     , 'dev'
     , 'down'
     , 'dry-run'
+    , 'force-info'
 ];
 $opts = getopt($shortopts, $longopts);
 if (isset($opts['h']) || isset($opts['help'])){
@@ -245,23 +255,25 @@ if (isset($opts['h']) || isset($opts['help'])){
     echo 'PDO_DSN="pgsql:host=..." vendor/bin/db-migration.php' . "\n";
     echo "  or export PDO_DSN=\"...\"\n";
     echo "\n";
-    echo "    -y --yes: no prompt\n";
-    echo "       --dev: run upgrade downgrade upgrade, for check correct downgrade\n";
-    echo "      --down: downgrade allowed\n";
-    echo "   --dry-run: check only, rollback transaction\n";
+    echo "      -y --yes: no prompt\n";
+    echo "         --dev: run upgrade downgrade upgrade, for check correct downgrade\n";
+    echo "        --down: downgrade allowed\n";
+    echo "     --dry-run: check only, rollback transaction\n";
+    echo "  --force-info: update only the information schema\n";
     echo "\n";
     exit(1);
 }
 $nocheck = !isset($opts['dev']);
 $nodown = !isset($opts['down']);
 $test = isset($opts['dry-run']);
+$onlyinfo = isset($opts['force-info']);
 if ($nodown)
     $yes = isset($opts['y']) || isset($opts['yes']);
 else
     $yes = false;
 
 try {
-    run($yes, $nocheck, $nodown, $test);
+    run($yes, $nocheck, $nodown, $test, $onlyinfo);
 }catch (Exception $e){
     decorate("Error!! " . $e->getMessage(), array('bgred', 'white'));
     throw $e;
