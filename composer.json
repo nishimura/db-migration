@@ -2,7 +2,6 @@
   "name": "nish/db-migration",
   "description": "Simple DB migration tool",
   "keywords": ["orm", "database"],
-  "homepage": "https://github.com/nishimura/db-migration",
   "license": "MIT",
   "authors": [{
     "name": "Satoshi Nishimura",
